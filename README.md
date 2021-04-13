@@ -1,5 +1,5 @@
 
-## Oculus Quest Body Tracking Experinent
+## Oculus Quest Body Tracking Experiment
 
 ### Unity Project
 
