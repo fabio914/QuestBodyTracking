@@ -49,3 +49,7 @@ Corridor/Library/metadata/
 /Assets/Oculus.meta
 /Assets/Resources/OVRBuildConfig.asset*
 /Assets/Resources/OVRPlatformToolSettings.asset*
+
+# 3D Character Dummy
+/Assets/Kevin\ Iglesias/
+/Assets/Kevin\ Iglesias.meta
