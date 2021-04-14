@@ -115,5 +115,7 @@ extension BodyTrackingViewController: ARSessionDelegate {
             sceneView.scene.rootNode.addChildNode(skeleton.mainNode)
             self.skeleton = skeleton
         }
+
+        sender.send(bodyAnchor: bodyAnchor)
     }
 }

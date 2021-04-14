@@ -58,51 +58,44 @@ final class InitialViewController: UIViewController {
             return
         }
 
-//        let connectionAlert = UIAlertController(title: "Connecting...", message: nil, preferredStyle: .alert)
-//
-//        present(connectionAlert, animated: true, completion: { [weak self] in
-//            guard let self = self else { return }
-//
-//            // FIXME: Do this in a way that doesn't block the main thread
-//
-//            let client = TCPClient(address: address, port: port)
-//
-//            switch client.connect(timeout: 10) {
-//            case .failure(let error):
-//                connectionAlert.dismiss(animated: false, completion: { [weak self] in
-//
-//                    let alert = UIAlertController(
-//                        title: "Error",
-//                        message: "Unable to connect: \(error)",
-//                        preferredStyle: .alert
-//                    )
-//
-//                    alert.addAction(.init(title: "OK", style: .default, handler: nil))
-//
-//                    self?.present(alert, animated: true, completion: nil)
-//                })
-//
-//            case .success:
-//                try? self.preferenceStorage.save(preference: .init(address: address))
-//
-//                connectionAlert.dismiss(animated: false, completion: { [weak self] in
-//
-//                    let viewController = BodyTrackingViewController(
-//                        sender: BodyTrackingSender(client: client)
-//                    )
-//
-//                    viewController.modalPresentationStyle = .overFullScreen
-//                    self?.present(viewController, animated: true, completion: nil)
-//                })
-//            }
-//        })
+        let connectionAlert = UIAlertController(title: "Connecting...", message: nil, preferredStyle: .alert)
 
-        let viewController = BodyTrackingViewController(
-            sender: BodyTrackingSender()
-        )
+        present(connectionAlert, animated: true, completion: { [weak self] in
+            guard let self = self else { return }
 
-        viewController.modalPresentationStyle = .overFullScreen
-        present(viewController, animated: true, completion: nil)
+            // FIXME: Do this in a way that doesn't block the main thread
+
+            let client = TCPClient(address: address, port: port)
+
+            switch client.connect(timeout: 10) {
+            case .failure(let error):
+                connectionAlert.dismiss(animated: false, completion: { [weak self] in
+
+                    let alert = UIAlertController(
+                        title: "Error",
+                        message: "Unable to connect: \(error)",
+                        preferredStyle: .alert
+                    )
+
+                    alert.addAction(.init(title: "OK", style: .default, handler: nil))
+
+                    self?.present(alert, animated: true, completion: nil)
+                })
+
+            case .success:
+                try? self.preferenceStorage.save(preference: .init(address: address))
+
+                connectionAlert.dismiss(animated: false, completion: { [weak self] in
+
+                    let viewController = BodyTrackingViewController(
+                        sender: BodyTrackingSender(client: client)
+                    )
+
+                    viewController.modalPresentationStyle = .overFullScreen
+                    self?.present(viewController, animated: true, completion: nil)
+                })
+            }
+        })
     }
 }
 
