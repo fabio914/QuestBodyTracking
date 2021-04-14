@@ -10,3 +10,7 @@
  - [Oculus Integration Package version 25](https://assetstore.unity.com/packages/tools/integration/oculus-integration-82022)
 
  - [3D Character Dummy](https://assetstore.unity.com/packages/3d/characters/humanoids/humans/3d-character-dummy-178395)
+
+## iOS Project
+
+ - Xcode 12.4 (iOS 14.0)
