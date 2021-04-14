@@ -78,38 +78,8 @@ extension Quaternion {
     init(x: Double, y: Double, z: Double, w: Double) {
         self.init(vector: .init(x: x, y: y, z: z, w: w))
     }
-}
 
-typealias Matrix3 = simd_double3x3
-
-extension Matrix3 {
-    var m11: Double { self[0, 0] }
-    var m12: Double { self[0, 1] }
-    var m13: Double { self[0, 2] }
-    var m21: Double { self[1, 0] }
-    var m22: Double { self[1, 1] }
-    var m23: Double { self[1, 2] }
-    var m31: Double { self[2, 0] }
-    var m32: Double { self[2, 1] }
-    var m33: Double { self[2, 2] }
-
-    init(
-        m11: Double,
-        m12: Double,
-        m13: Double,
-        m21: Double,
-        m22: Double,
-        m23: Double,
-        m31: Double,
-        m32: Double,
-        m33: Double
-    ) {
-      self.init([
-          .init(x: m11, y: m12, z: m13),
-          .init(x: m21, y: m22, z: m23),
-          .init(x: m31, y: m32, z: m33)
-      ])
-    }
+    static var identity = Quaternion(x: 0, y: 0, z: 0, w: 1)
 }
 
 struct Pose {
@@ -130,5 +100,18 @@ struct Pose {
             position: lhs.position + (lhs.rotation * rhs.position),
             rotation: lhs.rotation * rhs.rotation
         )
+    }
+
+    static var identity = Pose(position: .zero, rotation: .identity)
+
+    init(position: Vector3, rotation: Quaternion) {
+        self.position = position
+        self.rotation = rotation
+    }
+
+    init(_ m: simd_float4x4) {
+        let position = simd_make_float3(m.columns.3)
+        self.position = Vector3(Double(position.x), Double(position.y), Double(position.z))
+        self.rotation = Quaternion(rotationMatrix: SCNMatrix4(m))
     }
 }
