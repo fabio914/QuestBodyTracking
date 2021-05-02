@@ -83,8 +83,11 @@ public class SkeletonServer: MonoBehaviour {
     private TcpClient connectedTcpClient;
 
     private SkeletonPayload? skeletonPayload;
-    
-    // FIXME: Improve this....  
+      
+    public Transform robot;
+    public Transform headset;
+
+    // FIXME: Improve this....
     public Transform root;
     public Transform hips_joint;
     public Transform left_upLeg_joint;
@@ -189,9 +192,15 @@ public class SkeletonServer: MonoBehaviour {
             return;
         }
 
+        OVRPose modelHeadPose = skeletonPayload.Value.Joint(75).model.ToPose();
+        OVRPose inverseHeadPose = modelHeadPose.Inverse();
+        robot.position = headset.position - modelHeadPose.position;
+        // robot.rotation = inverseHeadPose.orientation * headset.rotation;
+        // robot.rotation =  Quaternion.Inverse(modelHeadPose.orientation) * headset.rotation;
+
         // FIXME: Improve this....
-        root.localRotation = skeletonPayload.Value.Joint(0).local.ToPose().orientation;
-        hips_joint.localRotation = skeletonPayload.Value.Joint(1).local.ToPose().orientation;
+        // root.localRotation = skeletonPayload.Value.Joint(0).local.ToPose().orientation;
+        // hips_joint.localRotation = skeletonPayload.Value.Joint(1).local.ToPose().orientation;
         left_upLeg_joint.localRotation = skeletonPayload.Value.Joint(2).local.ToPose().orientation;
         left_leg_joint.localRotation = skeletonPayload.Value.Joint(3).local.ToPose().orientation;
         left_foot_joint.localRotation = skeletonPayload.Value.Joint(4).local.ToPose().orientation;
