@@ -84,8 +84,8 @@ public class SkeletonServer: MonoBehaviour {
 
     private SkeletonPayload? skeletonPayload;
       
-    public Transform robot;
-    public Transform headset;
+    public GameObject robot;
+    public Transform heatset;
 
     // FIXME: Improve this....
     public Transform root;
@@ -189,15 +189,22 @@ public class SkeletonServer: MonoBehaviour {
 
     public void Update() {
         if (!skeletonPayload.HasValue) {
+            robot.SetActive(false);
             return;
         }
 
-        OVRPose modelHeadPose = skeletonPayload.Value.Joint(75).model.ToPose();
-        OVRPose inverseHeadPose = modelHeadPose.Inverse();
-        robot.position = headset.position - modelHeadPose.position;
-        // robot.rotation = inverseHeadPose.orientation * headset.rotation;
-        // robot.rotation =  Quaternion.Inverse(modelHeadPose.orientation) * headset.rotation;
+        robot.SetActive(true);
 
+        OVRPose modelHeadPose = skeletonPayload.Value.Joint(75).model.ToPose();
+        
+        // FIXME: The robot body will always be aligned with the head (cannot move the head independently of the body)
+        Vector3 xzForward = new Vector3(heatset.forward.x, 0, heatset.forward.z);
+
+        robot.transform.position = heatset.position - modelHeadPose.position - (xzForward.normalized * 0.25f) + (Vector3.up * 0.1f);
+        robot.transform.rotation = Quaternion.LookRotation(xzForward, Vector3.up) * Quaternion.AngleAxis(180, Vector3.up);
+
+        // robot.rotation = headset.rotation * Quaternion.AngleAxis(180, Vector3.up) * Quaternion.AngleAxis(90, Vector3.forward) * Quaternion.AngleAxis(-90, Vector3.right) * Quaternion.Inverse(modelHeadPose.orientation);
+        
         // FIXME: Improve this....
         // root.localRotation = skeletonPayload.Value.Joint(0).local.ToPose().orientation;
         // hips_joint.localRotation = skeletonPayload.Value.Joint(1).local.ToPose().orientation;
